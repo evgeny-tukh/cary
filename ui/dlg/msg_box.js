@@ -23,11 +23,23 @@ Cary.ui.MessageBox.prototype = Object.create (Cary.ui.Window.prototype);
 Cary.ui.MessageBox.prototype.onInitialize = function ()
 {
     var instance = this;
+    var yesNo    = 'yesNo' in this.options ? this.options.yesNo : false;
     
     this.buttonBlock = new Cary.ui.ControlBlock ({ parent: this.client, visible: true, anchor: Cary.ui.anchor.BOTTOM });
     this.dataBlock   = new Cary.ui.ControlBlock ({ parent: this.client, visible: true, text: this.text }, { width: '100%', padding: 10, height: 'fit-content', 'text-align': 'center', 'line-height': 20, 'font-size': 17 });
     this.buttonStyle = { width: 70, height: 30, float: 'right' };
-    this.okButton    = new Cary.ui.Button ({ text: 'OK', parent: this.buttonBlock.htmlObject, visible: true, onClick: function () { instance.close (true); } }, this.buttonStyle);
+    this.okButton    = new Cary.ui.Button ({ text: 'OK', parent: this.buttonBlock.htmlObject, visible: true, onClick: onOk }, this.buttonStyle);
+
+    if (yesNo)
+        this.cancelButton = new Cary.ui.Button ({ text: 'Cancel', parent: this.buttonBlock.htmlObject, visible: true }, this.buttonStyle);
+
+    function onOk ()
+    {
+        instance.close (true);
+
+        if ('onOk' in instance.callbacks)
+            instance.callbacks.onOk ();
+    }
 };
 
 Cary.ui.InputBox = function (options, callbacks)
