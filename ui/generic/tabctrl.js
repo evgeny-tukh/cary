@@ -30,12 +30,12 @@ Cary.ui.TabControl.prototype.addItem = function (itemDesc)
     {
         instance.items.forEach (function (itemDesc)
                                 {
-                                    if (itemDesc.itemDiv === event.target)
+                                   if (itemDesc.itemDiv === event.target)
                                     {
                                         itemDesc.itemDiv.className = 'tabItem_Selected';
 
-                                        if ('onSelected' in itemDesc)
-                                            itemDesc.onSelected ();
+                                        if ('onSelect' in itemDesc)
+                                            itemDesc.onSelect ();
                                     }
                                     else
                                     {
@@ -55,8 +55,8 @@ Cary.ui.TabControl.prototype.selectItem = function (index)
         {
             itemDesc.itemDiv.className = 'tabItem_Selected';
 
-            if ('onSelected' in itemDesc)
-                itemDesc.onSelected ();
+            if ('onSelect' in itemDesc)
+                itemDesc.onSelect ();
         }
         else
         {
