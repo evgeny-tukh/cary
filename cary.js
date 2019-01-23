@@ -557,6 +557,17 @@ Cary.tools.formatDateHours = function (timestamp)
            Cary.tools.formatNumberWithLZ (dateTime.getHours (), 2);
 };
 
+Cary.tools.formatDateHoursMinutes = function (timestamp)
+{
+    var dateTime = new Date (timestamp);
+    
+    return Cary.tools.formatNumberWithLZ (dateTime.getDate (), 2) + '.' + 
+           Cary.tools.formatNumberWithLZ (dateTime.getMonth () + 1, 2) + '.' + 
+           Cary.tools.formatNumberWithLZ (dateTime.getFullYear (), 4) + ' ' + 
+           Cary.tools.formatNumberWithLZ (dateTime.getHours (), 2) + ':' +
+           Cary.tools.formatNumberWithLZ (dateTime.getMinutes (), 2);
+};
+
 Cary.Map.prototype.plotIconGroup = function (startX, startY, callbacks, properties, initialObject)
 {
     var start     = this.clientToGeo (startX, startY);
