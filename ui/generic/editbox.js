@@ -12,10 +12,17 @@ Cary.ui.EditBox.prototype.initialize = function ()
 {
     this.htmlObject = document.createElement ('input');
     this.numeric    = 'numeric' in this.desc && this.desc.numeric;
+    this.time       = 'time' in this.desc && this.desc.time;
     this.float      = 'float' in this.desc && this.desc.float;
     this.readOnly   = 'readOnly' in this.desc && this.desc.readOnly;
 
-    this.htmlObject.type      = this.numeric ? 'number' : 'text';
+    if (this.numeric)
+        this.htmlObject.type = 'number';
+    else if (this.time)
+        this.htmlObject.type = 'time';
+    else
+        this.htmlObject.type = 'text';
+    
     this.htmlObject.id        = 'id' in this.desc ? this.desc.id : null;
     this.htmlObject.className = 'editBox';
     
@@ -32,6 +39,8 @@ Cary.ui.EditBox.prototype.initialize = function ()
         this.htmlObject.value = 'value' in this.desc ? this.desc.value : 0.0;
     else if (this.numeric)
         this.htmlObject.value = 'value' in this.desc ? this.desc.value : 0;
+    else if (this.time)
+        this.htmlObject.value = 'value' in this.desc ? Cary.tools.formatTime (this.desc.value, false) : null;
     else
         this.htmlObject.value = 'text' in this.desc ? this.desc.text : '';
 
@@ -70,6 +79,8 @@ Cary.ui.EditBox.prototype.getValue = function ()
             value = value === '' ? 0.0 : parseFloat (value);
         else if (this.numeric)
             value = value === '' ? 0 : parseInt (value);
+        else if (this.time)
+            value = value === '' ? null : this.htmlObject.valueAsDate;
     }
     else
     {
@@ -77,6 +88,39 @@ Cary.ui.EditBox.prototype.getValue = function ()
     }
     
     return value;
+};
+
+Cary.ui.EditBox.prototype.getTimeComponent = function (index)
+{
+    var result;
+    
+    if (this.time)
+    {
+        var components = this.htmlObject.value.split (':');
+        
+        result = index < components.length ? parseInt (components [index]) : null;
+    }
+    else
+    {
+        result = null;
+    }
+    
+    return result;
+};
+
+Cary.ui.EditBox.prototype.getHours = function ()
+{
+    return this.getTimeComponent (0);
+};
+
+Cary.ui.EditBox.prototype.getMinutes = function ()
+{
+    return this.getTimeComponent (1);
+};
+
+Cary.ui.EditBox.prototype.getSeconds = function ()
+{
+    return this.getTimeComponent (2);
 };
 
 Cary.ui.TimeEditBox = function ()
