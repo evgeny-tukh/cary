@@ -1,9 +1,10 @@
-Cary.controls.ImgButton = function (map, location, imgSource, options)
+Cary.controls.ImgButton = function (map, location, imgSource, options, containerStyles)
 {
     var ctlOptions;
     
     this.imgSource = imgSource;
     this.img       = null;
+    this.text      = 'text' in options ? options.text : null;
     
     if (Cary.tools.isNothing (options))
         options = {};
@@ -25,6 +26,12 @@ Cary.controls.ImgButton = function (map, location, imgSource, options)
         this.container.onmouseover = function () { instance.container.style.backgroundColor = instance.hiliteColor; };
         this.container.onmouseout  = function () { instance.container.style.backgroundColor = instance.normalColor; };
     }
+    
+    if (!Cary.tools.isNothing (containerStyles))
+    {
+        for (var styleName in containerStyles)
+            this.container.style [styleName] = containerStyles [styleName];
+    }
 };
 
 Cary.controls.ImgButton.prototype = Object.create (Cary.controls.GenericMapDomControl.prototype);
@@ -43,6 +50,9 @@ Cary.controls.ImgButton.prototype.initialize = function ()
         this.img.onclick = this.options.onClick;
     
     this.container.appendChild (this.img);
+    
+    if (this.text)
+        this.container.innerText = this.text;
 };
 
 Cary.controls.ImgButton.prototype.setImage = function (imgSource)

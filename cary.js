@@ -168,9 +168,9 @@ Cary.Map.prototype.createPosIndicator = function (location, options)
     return new Cary.controls.PosIndicator (this.map, location, options);
 };
 
-Cary.Map.prototype.createImgButton = function (location, imgSource, options)
+Cary.Map.prototype.createImgButton = function (location, imgSource, options, containerStyles)
 {
-    return new Cary.controls.ImgButton (this.map, location, imgSource, options);
+    return new Cary.controls.ImgButton (this.map, location, imgSource, options, containerStyles);
 };
 
 Cary.Map.prototype.createMapMenu = function (position, items, options)
