@@ -63,6 +63,9 @@ Cary.ui.Window = function (desc)
     if ('visible' in desc && desc.visible)
         this.show ();
 
+    if ('zOrder' in desc && desc.zOrder)
+        this.wnd.style.zIndex = desc.zOrder.toString ();
+
     function adjustPosition (instance)
     {
         function getWidth ()

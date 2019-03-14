@@ -1,14 +1,17 @@
-Cary.ui.PositionEditWnd = function (parent, data, callbacks)
+Cary.ui.PositionEditWnd = function (parent, data, callbacks, zOrder)
 {
     this.callbacks   = Cary.tools.isNothing (callbacks) ? {} : callbacks;
     this.data        = Cary.tools.isNothing (data) ? { lat: null, lon: null } : data;
     this.lat         = this.data.lat;
     this.lon         = this.data.lon;
-    
+
+    if (!zOrder)
+        zOrder = 1111;
+
     if (parent === null)
         parent = document.getElementsByTagName ('body') [0];
     
-    Cary.ui.Window.apply (this, [{ position: { hcenter: true, vcenter: true, width: 195, height: 140, absolute: true }, title: 'Enter the position', parent: parent, visible: true }]);
+    Cary.ui.Window.apply (this, [{ position: { hcenter: true, vcenter: true, width: 195, height: 140, absolute: true }, title: 'Enter the position', parent: parent, visible: true, zOrder: zOrder }]);
 };
 
 Cary.ui.PositionEditWnd.prototype = Object.create (Cary.ui.Window.prototype);

@@ -316,6 +316,14 @@ Cary.ui.ListView.prototype.getItemCount = function ()
     return this.items.length;
 };
 
+Cary.ui.ListView.prototype.setItemColor = function (itemIndex, columnIndex, color, bgColor)
+{
+    this.items [itemIndex].itemColumns [columnIndex].style.color = color;
+
+    if (bgColor)
+        this.items [itemIndex].itemColumns [columnIndex].style.backgroundColor = bgColor;
+};
+
 Cary.ui.ListView.prototype.setItemText = function (itemIndex, columnIndex, text)
 {
     this.items [itemIndex].itemColumns [columnIndex].innerText = text;

@@ -594,3 +594,10 @@ Cary.tools.getGermanDate = function (source)
     
     return new Date (parseInt (components [2]), parseInt (components [1]) - 1, parseInt (components [0]));
 };
+
+Cary.tools.degMinToDouble = function (deg, min, char)
+{
+    var sign = (!char) ? 1 : ('NnEe'.indexOf (char) >= 0 ? 1 : -1);
+
+    return (deg + min / 60) * sign;
+};
