@@ -173,6 +173,11 @@ Cary.Map.prototype.createImgButton = function (location, imgSource, options, con
     return new Cary.controls.ImgButton (this.map, location, imgSource, options, containerStyles);
 };
 
+Cary.Map.prototype.createSlider = function (location, options, containerStyles)
+{
+    return new Cary.controls.GMSlider (this.map, location, options, containerStyles);
+};
+
 Cary.Map.prototype.createMapMenu = function (position, items, options)
 {
     return new Cary.controls.MapMenu (this.map, position, items, options);

@@ -4,6 +4,7 @@ Cary.controls.ImgButton = function (map, location, imgSource, options, container
     
     this.imgSource = imgSource;
     this.img       = null;
+    this.enabled   = true;
     this.text      = 'text' in options ? options.text : null;
     
     if (Cary.tools.isNothing (options))
@@ -23,8 +24,8 @@ Cary.controls.ImgButton = function (map, location, imgSource, options, container
         
         this.hiliteColor           = ctlOptions.hiliteColor;
         this.normalColor           = 'backgroundColor' in ctlOptions ? ctlOptions.backgroundColor : null;
-        this.container.onmouseover = function () { instance.container.style.backgroundColor = instance.hiliteColor; };
-        this.container.onmouseout  = function () { instance.container.style.backgroundColor = instance.normalColor; };
+        this.container.onmouseover = function () { if (instance.enabled) instance.container.style.backgroundColor = instance.hiliteColor; };
+        this.container.onmouseout  = function () { if (instance.enabled) instance.container.style.backgroundColor = instance.normalColor; };
     }
     
     if (!Cary.tools.isNothing (containerStyles))
@@ -35,6 +36,12 @@ Cary.controls.ImgButton = function (map, location, imgSource, options, container
 };
 
 Cary.controls.ImgButton.prototype = Object.create (Cary.controls.GenericMapDomControl.prototype);
+
+Cary.controls.ImgButton.prototype.enable = function (enabled)
+{
+    this.enabled                         = enabled;
+    this.container.style.backgroundColor = enabled ? '#ccff99' : 'lightgray';
+};
 
 Cary.controls.ImgButton.prototype.initialize = function ()
 {
