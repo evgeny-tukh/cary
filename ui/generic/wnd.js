@@ -58,6 +58,9 @@ Cary.ui.Window = function (desc)
     if (!('noCloseIcon' in desc) || !desc.noCloseIcon)
         this.wnd.appendChild (this.closeIcon);
 
+    if ('userInit' in desc)
+        desc.userInit (this);
+        
     this.onInitialize ();
     
     if ('visible' in desc && desc.visible)
@@ -105,13 +108,13 @@ Cary.ui.Window = function (desc)
             }
             else
             {
-                if ('left' in desc.position)
+                if (desc.position.left)
                     instance.wnd.style.left = Cary.tools.int2pix (desc.position.left);
 
-                if ('width' in desc.position)
+                if (desc.position.width)
                     instance.wnd.style.width = getWidth ();
 
-                if ('right' in desc.position)
+                if (desc.position.right)
                     instance.wnd.style.right = Cary.tools.int2pix (desc.position.right);
             }
 
@@ -122,13 +125,13 @@ Cary.ui.Window = function (desc)
             }
             else
             {
-                if ('top' in desc.position)
+                if (desc.position.top)
                     instance.wnd.style.top = Cary.tools.int2pix (desc.position.top);
 
-                if ('height' in desc.position)
+                if (desc.position.height)
                     instance.wnd.style.height = getHeight ();
 
-                if ('bottom' in desc.position)
+                if (desc.position.bottom)
                     instance.wnd.style.bottom = Cary.tools.int2pix (desc.position.bottom);
             }
             
@@ -140,6 +143,8 @@ Cary.ui.Window = function (desc)
 
 Cary.ui.Window.prototype.onInitialize = function ()
 {
+    if ('userInit' in this)
+        this.userInit ();
 };
 
 Cary.ui.Window.prototype.close = function (quiet)
@@ -218,4 +223,20 @@ Cary.ui.Window.prototype.setHeight = function (height)
     
         this.wnd.style.top = Cary.tools.int2pix (top)
     }
+};
+
+Cary.ui.Window.prototype.getChildById = function (id)
+{
+    var children = this.client.getElementsByTagName ('*');
+    var result   = null;
+
+    for (var i = 0; i < children.length; ++ i)
+    {
+        if (children [i].id === id)
+        {
+            result = children [i]; break;
+        }
+    }
+        
+    return result;
 };

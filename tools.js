@@ -537,6 +537,8 @@ Cary.tools.WaitForCondition = function (condition, onElapsed, interval, param)
     }
 };
 
+Cary.tools.waitForCondition = Cary.tools.WaitForCondition;
+
 Cary.tools.utf8ToAnsi = function (source)
 {
     var result;

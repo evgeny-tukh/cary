@@ -137,4 +137,46 @@ Cary.ui.ControlBlock.prototype.initialize = function ()
     
     Cary.ui.Control.prototype.initialize.apply (this, arguments);
 };
+
+Cary.ui.SVG = function (desc, styles)
+{
+    Cary.ui.ControlBlock.apply (this, arguments);
+};
+
+Cary.ui.SVG.prototype = Object.create (Cary.ui.ControlBlock.prototype);
+
+Cary.ui.SVG.prototype.initialize = function ()
+{
+    var svg  = document.createElement ('svg');
+    var path = document.createElement ('path');
+
+    Cary.ui.ControlBlock.prototype.initialize.apply (this, arguments);
+
+    if ('focusable' in this.desc)
+        addAttribute (svg, 'focusable', this.desc.focusable ? 'true' : 'false');
+
+    if ('viewbox' in this.desc)
+        addAttribute (svg, 'viewBox', this.desc.viewbox);
+        
+    if ('height' in this.desc)
+        addAttribute (svg, 'height', this.desc.height);
+        
+    if ('width' in this.desc)
+        addAttribute (svg, 'width', this.desc.width);
+        
+    if ('path' in this.desc)
+        addAttribute (path, 'd', this.desc.path);
     
+    svg.appendChild (path);
+
+    this.htmlObject.appendChild (svg);
+
+    function addAttribute (element, attrName, attrValue)
+    {
+        var attr = document.createAttribute (attrName);
+
+        attr.value = attrValue;
+
+        element.setAttributeNode (attr);
+    }
+};

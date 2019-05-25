@@ -77,7 +77,7 @@ Cary.ui.PopUpMenu.prototype.addMenuItem = function (item)
     {
         this.mouseIn = false;
 
-        if (event.relatedTarget.className !== 'popUpMenuItem')
+        if (event.relatedTarget && (event.relatedTarget.className !== 'popUpMenuItem'))
             instance.show (false);
     }
 };
@@ -86,6 +86,8 @@ Cary.ui.PopUpMenu.prototype.show = function (visible)
 {
     if (this.anchorElement !== null)
     {
+        var parent = this.anchorElement.parentElement;
+
         if (visible)
         {
             if (this.htmlObject.style.width === null || this.htmlObject.style.width === '')
@@ -93,38 +95,69 @@ Cary.ui.PopUpMenu.prototype.show = function (visible)
             
             this.htmlObject.style.height = 'fit-content';
             
-            if (this.desc.anchorType & Cary.ui.anchor.BOTTOM)
+            if (this.anchorElement.style.position === 'absolute')
             {
-                this.htmlObject.style.bottom  = Cary.tools.int2pix (this.anchorElement.offsetHeight + 10);
-                
-                if (this.desc.anchorType & Cary.ui.anchor.LEFT)
-                    this.htmlObject.style.left = Cary.tools.int2pix (this.anchorElement.offsetLeft);
+                if (this.desc.anchorType & Cary.ui.anchor.BOTTOM)
+                {
+                    this.htmlObject.style.bottom  = Cary.tools.int2pix (this.anchorElement.offsetHeight + 10);
+                    
+                    if (this.desc.anchorType & Cary.ui.anchor.LEFT)
+                        this.htmlObject.style.left = Cary.tools.int2pix (this.anchorElement.offsetLeft);
+                    else
+                        this.htmlObject.style.right = Cary.tools.int2pix (this.anchorElement.offsetLeft + this.anchorElement.offsetWidth);
+                }
+                else if (this.desc.anchorType & Cary.ui.anchor.TOP)
+                {
+                    this.htmlObject.style.top  = Cary.tools.int2pix (this.anchorElement.offsetTop + this.anchorElement.offsetHeight);
+                    
+                    if (this.desc.anchorType & Cary.ui.anchor.LEFT)
+                        this.htmlObject.style.left = Cary.tools.int2pix (this.anchorElement.offsetLeft);
+                    else
+                        this.htmlObject.style.right = Cary.tools.int2pix (this.anchorElement.offsetLeft + this.anchorElement.offsetWidth);
+                }
+                else if (this.desc.anchorType & Cary.ui.anchor.LEFT)
+                {
+                    this.htmlObject.style.left = Cary.tools.int2pix (this.anchorElement.offsetLeft + this.anchorElement.offsetWidth);
+                }
+                else if (this.desc.anchorType & Cary.ui.anchor.RIGHT)
+                {
+                    this.htmlObject.style.right = Cary.tools.int2pix (this.anchorElement.offsetLeft);
+                }
+
+                parent.appendChild (this.htmlObject);
+            }
+            else
+            {
+                this.htmlObject.style.position = 'static';
+                this.htmlObject.style.float    = this.anchorElement.style.float;
+
+                if (this.htmlObject.style.float === 'right')
+                {
+                    if (this.desc.anchorType & Cary.ui.anchor.LEFT)
+                    {
+                        parent.nextSibling ? parent.nextSibling.insertBefore (this.htmlObject, this.anchorElement) : parent.appendChild (this.htmlObject);
+
+                        if (this.anchorElement.style.marginLeft)
+                            this.htmlObject.style.marginRight = '-' + this.anchorElement.style.marginLeft;
+                    }
+                    else
+                    {
+                        parent.insertBefore (this.htmlObject, this.anchorElement);
+                    }
+                }
+                else if (this.desc.anchorType & Cary.ui.anchor.RIGHT)
+                {
+                    parent.nextSibling ? parent.nextSibling.insertBefore (this.htmlObject, this.anchorElement) : parent.appendChild (this.htmlObject);
+                }
                 else
-                    this.htmlObject.style.right = Cary.tools.int2pix (this.anchorElement.offsetLeft + this.anchorElement.offsetWidth);
-            }
-            else if (this.desc.anchorType & Cary.ui.anchor.TOP)
-            {
-                this.htmlObject.style.top  = Cary.tools.int2pix (this.anchorElement.offsetTop + this.anchorElement.offsetHeight);
-                
-                if (this.desc.anchorType & Cary.ui.anchor.LEFT)
-                    this.htmlObject.style.left = Cary.tools.int2pix (this.anchorElement.offsetLeft);
-                else
-                    this.htmlObject.style.right = Cary.tools.int2pix (this.anchorElement.offsetLeft + this.anchorElement.offsetWidth);
-            }
-            else if (this.desc.anchorType & Cary.ui.anchor.LEFT)
-            {
-                this.htmlObject.style.left = Cary.tools.int2pix (this.anchorElement.offsetLeft + this.anchorElement.offsetWidth);
-            }
-            else if (this.desc.anchorType & Cary.ui.anchor.RIGHT)
-            {
-                this.htmlObject.style.right = Cary.tools.int2pix (this.anchorElement.offsetLeft);
-            }
-                
-            this.anchorElement.parentElement.appendChild (this.htmlObject);
+                {
+                    parent.insertBefore (this.htmlObject, this.anchorElement);
+                }
+            }                
         }
         else
         {
-            this.anchorElement.parentElement.removeChild (this.htmlObject);
+            parent.removeChild (this.htmlObject);
         }
     }
 };
@@ -169,6 +202,9 @@ Cary.ui.PopUpButton.prototype.initialize = function ()
 
     Cary.ui.Control.prototype.initialize.apply (this, arguments);
     
+    if (this.htmlObject.style.fontSize)
+        this.label.style.fontSize = this.htmlObject.style.fontSize;
+
     this.menu = new Cary.ui.PopUpMenu ({ anchorElement: this.htmlObject, anchorType: this.desc.anchorType, items: this.desc.popupMenu  }, { width: this.desc.menuWidth });
 };
 
