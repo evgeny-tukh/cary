@@ -97,7 +97,8 @@ Cary.maps.baseMaps.predefinedTileProviders.createScanExTileUrlFunction = functio
                var X   = coord.x % (1 << zoom);  // wrap
                var url = 'http://geomixer.scanex.ru/TileSender.ashx?ModeKey=tile&ftc=osm&x=' + X.toString () + '&y=' + coord.y.toString () + 
                          '&z=' + zoom.toString () + 
-                         '&srs=3857&LayerName=RCAF64ECA6B32F437CB6AC72B5E6F85B97:132152&key=mm6UnkKa4BVxRa6YxDVxyYch5SeuT0VlGi82zJr9MhZ4XUGSOORqzgozbX5uByvl61AInDA4N0znBdLMEBmwF1ANUlUwG0XNyARpq0K9Wis%3D';
+                         //'&srs=3857&LayerName=RCAF64ECA6B32F437CB6AC72B5E6F85B97:132152&key=mm6UnkKa4BVxRa6YxDVxyYch5SeuT0VlGi82zJr9MhZ4XUGSOORqzgozbX5uByvl61AInDA4N0znBdLMEBmwF1ANUlUwG0XNyARpq0K9Wis%3D';
+                         '&srs=3857&LayerName=RCAF64ECA6B32F437CB6AC72B5E6F85B97:132152&key=mm6UnkKa4BVxRa6YxDVxyYch5SeuT0VlGi82zJr9MhZ4XUGSOORqzgozbX5uByvl61AInDA4N0znBdLMEBmwF0d%2BsFJjK4smGIU8Xn5Dlfw%3D';
 
                return url;
            };
