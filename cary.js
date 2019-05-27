@@ -814,7 +814,12 @@ Cary.Map.prototype.createMarker = function (lat, lon, options)
         markerOptions.anchor = new google.maps.Point (options.anchor.x, options.anchor.y);
     
     if ('shape' in options)
+    {
         markerOptions.icon = { fillColor: color, fillOpacity: 1, path: options.shape, strokeColor: color };
+
+        if (options.rotation)
+            markerOptions.icon.rotation = options.rotation;
+    }
     
     if ('icon' in options)
         markerOptions.icon = { url: options.icon };
