@@ -83,6 +83,9 @@ Cary.ui.ListBox.prototype.addItem = function (text, data, selectNewItem)
     if (this.htmlObject.style.color)
         itemObject.style.color = this.htmlObject.style.color;
 
+    if (this.htmlObject.style.backgroundColor)
+        itemObject.style.backgroundColor = this.htmlObject.style.backgroundColor;
+
     this.htmlObject.appendChild (itemObject);
 
     if (!this.comboBox)
