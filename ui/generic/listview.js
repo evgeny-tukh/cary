@@ -31,6 +31,12 @@ Cary.ui.ListView.prototype.initialize = function ()
 
     Cary.ui.Control.prototype.initialize.apply (this, arguments);
 
+    if (this.desc.noBorder)
+    {
+        this.htmlObject.style.borderColor = 'transparent';
+        this.header.style.borderColor     = 'transparent';
+    }
+
     for (i = 0, x = 1; i < this.desc.columns.length; ++ i)
     {
         var columnDesc = this.desc.columns [i];
@@ -60,13 +66,16 @@ Cary.ui.ListView.prototype.initialize = function ()
         else if ('fontSize' in this.desc)
             columnHeader.style.fontSize = this.desc.fontSize;
 
+        if (this.desc.noBorder)
+            columnHeader.style.borderColor = 'transparent';
+
         if ('itemPadding' in this.desc)
         {
             columnHeader.style.paddingBottom = this.desc.itemPadding;
             columnHeader.style.paddingTop    = this.desc.itemPadding;
         }
                 
-            x += (columnDesc.width + 8);
+        x += (columnDesc.width + 8);
         
         this.header.appendChild (columnHeader);
         
@@ -211,6 +220,13 @@ Cary.ui.ListView.prototype.insertItem = function (columnText, data, index)
             itemColumnDiv.innerText   = '*';
             itemColumnDiv.style.color = 'transparent';
         }
+        else if ('color' in this.desc)
+        {
+            itemColumnDiv.style.color = this.desc.color;
+        }
+
+        if (this.desc.noBorder)
+            itemColumnDiv.style.borderColor = 'transparent';
 
         if ('fontSize' in this.desc)
             itemColumnDiv.style.fontSize = this.desc.fontSize;
@@ -276,7 +292,19 @@ Cary.ui.ListView.prototype.selectItem = function (index)
         for (i = 0; i < this.items.length; ++ i)
         {
             for (j = 0; j < this.items [i].itemColumns.length; ++ j)
+            {
                 this.items [i].itemColumns [j].className = (i === index) ? 'listViewItemColumnSelected' : 'listViewItemColumn';
+
+                if (this.desc.selectedColor)
+                {
+                    if (i === index)
+                        this.items [i].itemColumns [j].style.color = this.items [i].itemColumns [j].innerText !== '*' ? this.desc.selectedColor : 'transparent';
+                    else if (this.desc.color)
+                        this.items [i].itemColumns [j].style.color = this.items [i].itemColumns [j].innerText !== '*' ? this.desc.color : 'transparent';
+                    else
+                        this.items [i].itemColumns [j].style.color = this.items [i].itemColumns [j].innerText !== '*' ? null : 'transparent';
+                }
+            }
         }
 
         if (!Cary.tools.isNothing (this.desc.onSelect))
