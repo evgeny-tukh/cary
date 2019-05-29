@@ -333,6 +333,11 @@ Cary.ui.ListView.prototype.onClickItem = function (event, itemDiv)
     }
 };
 
+Cary.ui.ListView.prototype.setOnItemClick = function (column, handler)
+{
+    this.desc.columns [column].onItemClick = handler;
+};
+
 Cary.ui.ListView.prototype.onDblClickItem = function (event, itemDiv)
 {
     var i, j;

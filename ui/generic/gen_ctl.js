@@ -116,6 +116,8 @@ Cary.ui.Control.prototype.initialize = function ()
         
         if ('onClick' in this.desc)
             this.htmlObject.onclick = this.desc.onClick;
+
+        this.htmlObject.control = this;
     }
 };
 
