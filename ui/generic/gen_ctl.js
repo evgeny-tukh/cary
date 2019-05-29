@@ -31,10 +31,18 @@ Cary.ui.Control.prototype.show = function (visible)
     
     if (this.htmlObject !== null)
     {
+        if (!this.displayStyle)
+        {
+            if (this.htmlObject.style.display && this.htmlObject.style.display !== 'none')
+                this.displayStyle = this.htmlObject.style.display;
+        }
+
+        var newDisplay = visible ? null : 'none';
+
         if (visible && this.parent && !this.parent.contains (this.htmlObject))
             this.parent.appendChild (this.htmlObject);
         
-        this.htmlObject.style.display = visible ? null : 'none';
+        this.htmlObject.style.display = visible ? (this.displayStyle ? this.displayStyle : null) : 'none';
     }
 };
 

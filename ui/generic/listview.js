@@ -55,7 +55,18 @@ Cary.ui.ListView.prototype.initialize = function ()
         if ('onHeaderClick' in columnDesc)
             columnHeader.onclick = columnDesc.onHeaderClick;
         
-        x += (columnDesc.width + 8);
+        if ('fontSize' in columnDesc)
+            columnHeader.onclick = columnDesc.onHeaderClick;
+        else if ('fontSize' in this.desc)
+            columnHeader.style.fontSize = this.desc.fontSize;
+
+        if ('itemPadding' in this.desc)
+        {
+            columnHeader.style.paddingBottom = this.desc.itemPadding;
+            columnHeader.style.paddingTop    = this.desc.itemPadding;
+        }
+                
+            x += (columnDesc.width + 8);
         
         this.header.appendChild (columnHeader);
         
@@ -200,7 +211,16 @@ Cary.ui.ListView.prototype.insertItem = function (columnText, data, index)
             itemColumnDiv.innerText   = '*';
             itemColumnDiv.style.color = 'transparent';
         }
-        
+
+        if ('fontSize' in this.desc)
+            itemColumnDiv.style.fontSize = this.desc.fontSize;
+
+        if ('itemPadding' in this.desc)
+        {
+            itemColumnDiv.style.paddingBottom = this.desc.itemPadding;
+            itemColumnDiv.style.paddingTop    = this.desc.itemPadding;
+        }
+            
         x += (this.desc.columns [i].width + 8);
 
         itemDiv.appendChild (itemColumnDiv);

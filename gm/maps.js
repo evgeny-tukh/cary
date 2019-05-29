@@ -83,7 +83,7 @@ Cary.maps.baseMaps.predefinedTileProviders.createOpenWeatherTileUrlFunction = fu
            {
                var X   = coord.x % (1 << zoom);  // wrap
                var url = 'http://sat.owm.io/sql/' + zoom.toString () + '/' + X.toString () + '/' + coord.y.toString () + '?order=last&from=' + prefix + 
-                         '&APPID=3f9acf970666203f47471c774f404aee';
+                         '&APPID=5ee22b87cd925980a0f5c7ce7eba57a0';
                          //'&APPID=1149c92adf9c8f93227ee161960005a9';
 alert(url);
                return url;
@@ -237,7 +237,7 @@ Cary.maps.overlayMaps.createOpenWeatherTileUrlFunc = function (prefix)
     return function (coord, zoom)
            {
                var X   = coord.x % (1 << zoom);  // wrap
-               var url = 'http://tile.openweathermap.org/map/' + prefix + '_new/' + zoom.toString () + '/' + X.toString () + '/' + coord.y.toString () + '.png?appid=3f9acf970666203f47471c774f404aee'; // '.png?appid=1149c92adf9c8f93227ee161960005a9';
+               var url = 'http://tile.openweathermap.org/map/' + prefix + '_new/' + zoom.toString () + '/' + X.toString () + '/' + coord.y.toString () + '.png?appid=5ee22b87cd925980a0f5c7ce7eba57a0'; // '.png?appid=1149c92adf9c8f93227ee161960005a9';
                
                return url;
            };

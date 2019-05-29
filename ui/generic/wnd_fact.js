@@ -75,19 +75,24 @@ Cary.WndFactory.invokeGlobalAction = function (obj, name, param, evtObj)
 
 Cary.WndFactory.getWindowDesc = function (xmlWndDesc)
 {
-    var wndDesc = { props: {}, controls: [], panels: [] };
-    var propsCol = xmlWndDesc.getElementsByTagName ('properties');
-    var panesCol = xmlWndDesc.getElementsByTagName ('panels');
-    var props    = propsCol.length > 0 ? propsCol [0].getElementsByTagName ('property') : [];
-    var ctrlCol  = xmlWndDesc.getElementsByTagName ('controls');
-    var controls = ctrlCol.length > 0 ? ctrlCol [0].children : [];
-    var panels   = panesCol.length > 0 ? panesCol [0].children : [];
-    var id       = xmlWndDesc.attributes ['id'] ? xmlWndDesc.attributes ['id'].nodeValue : null;
+    var wndDesc   =  { props: {}, controls: [], panels: [] };
+    var inHtmlCol = xmlWndDesc.getElementsByTagName ('innerHtml');
+    var propsCol  = xmlWndDesc.getElementsByTagName ('properties');
+    var panesCol  = xmlWndDesc.getElementsByTagName ('panels');
+    var props     = propsCol.length > 0 ? propsCol [0].getElementsByTagName ('property') : [];
+    var innerHtml = inHtmlCol.length > 0 ? inHtmlCol [0] : null;
+    var ctrlCol   = xmlWndDesc.getElementsByTagName ('controls');
+    var controls  = ctrlCol.length > 0 ? ctrlCol [0].children : [];
+    var panels    = panesCol.length > 0 ? panesCol [0].children : [];
+    var id        = xmlWndDesc.attributes ['id'] ? xmlWndDesc.attributes ['id'].nodeValue : null;
 
-    wndDesc.id       = id;
-    wndDesc.paneMode = xmlWndDesc.tagName === 'panel';
-    wndDesc.events   = Cary.WndFactory.getEvents (xmlWndDesc);
-
+    wndDesc.id        = id;
+    wndDesc.paneMode  = xmlWndDesc.tagName === 'panel';
+    wndDesc.events    = Cary.WndFactory.getEvents (xmlWndDesc);
+    
+    if (innerHtml)
+        wndDesc.innerHtml = innerHtml.innerHTML;
+        
     for (var j = 0; j < props.length; ++ j)
     {
         var prop     = props [j];
@@ -185,12 +190,7 @@ Cary.WndFactory.createControlFromDesc = function (options)
     var attrs   = 'attrs' in desc ? desc.attrs : {};
     var menu    = 'menu' in desc ? desc.menu : [];
     var ctlDesc = {};
-    //var styles  = Cary.WndFactory.getDefStyles (desc.type);
-if(props.id==="gm")    
-{
-    var iii=0;
-    ++iii;
-}
+
     ctlDesc.parent  = parent;
     ctlDesc.visible = true;
 
@@ -325,10 +325,11 @@ Cary.WndFactory.prototype.createWindowFromDesc = function (wndDesc)
         var anchor     = wndObject.desc.props.anchor;
         var htmlObject = wnd.client ? wnd.client : wnd.wnd;
 
+        if (wndDesc.innerHtml)
+            htmlObject.innerHTML = wndDesc.innerHtml;
+
         if ('events' in wndDesc)
         {
-            var htmlObject = wnd.client ? wnd.client : wnd.wnd;
-
             wndDesc.events.forEach (function (event)
             {
                 htmlObject.addEventListener (event.type,
