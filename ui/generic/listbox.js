@@ -49,7 +49,7 @@ Cary.ui.ListBox.prototype.getSelectedData = function ()
     return result;
 };
 
-Cary.ui.ListBox.prototype.addItem = function (text, data, selectNewItem)
+Cary.ui.ListBox.prototype.addItem = function (text, data, selectNewItem, color)
 {
     var itemObject = document.createElement ('option');
     var instance   = this;
@@ -80,8 +80,16 @@ Cary.ui.ListBox.prototype.addItem = function (text, data, selectNewItem)
                            };
     itemObject.onclick   = itemObject.onselect;
 
-    if (this.htmlObject.style.color)
-        itemObject.style.color = this.htmlObject.style.color;
+    if (color)
+    {
+        itemObject.style.color = color;
+        itemObject.color       = color;
+    }
+    else
+    {
+        if (this.htmlObject.style.color)
+            itemObject.style.color = this.htmlObject.style.color;
+    }
 
     if (this.htmlObject.style.backgroundColor)
         itemObject.style.backgroundColor = this.htmlObject.style.backgroundColor;
