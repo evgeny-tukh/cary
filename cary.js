@@ -819,6 +819,12 @@ Cary.Map.prototype.createMarker = function (lat, lon, options)
 
         if (options.rotation)
             markerOptions.icon.rotation = options.rotation;
+
+        if (options.scale)
+            markerOptions.icon.scale = options.scale;
+
+        if (options.strokeWeight)
+            markerOptions.icon.strokeWeight = options.strokeWeight;
     }
     
     if ('icon' in options)

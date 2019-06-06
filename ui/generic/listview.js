@@ -24,7 +24,7 @@ Cary.ui.ListView.prototype.initialize = function ()
 
     this.htmlObject.className = 'listView';
     this.header.className     = 'listViewHeader';
-    this.client.className     = 'listViewClient';
+    this.client.className     = this.desc.adaptive ? 'listViewHeader' : 'listViewClient';
     
     this.htmlObject.appendChild (this.header);
     this.htmlObject.appendChild (this.client);
@@ -65,6 +65,11 @@ Cary.ui.ListView.prototype.initialize = function ()
             columnHeader.onclick = columnDesc.onHeaderClick;
         else if ('fontSize' in this.desc)
             columnHeader.style.fontSize = this.desc.fontSize;
+        else if ('fontSize' in this.styles)
+            columnHeader.style.fontSize = this.styles.fontSize;
+
+        if ('headerColor' in this.desc)
+            columnHeader.style.color = this.desc.headerColor;
 
         if (this.desc.noBorder)
             columnHeader.style.borderColor = 'transparent';
@@ -224,12 +229,18 @@ Cary.ui.ListView.prototype.insertItem = function (columnText, data, index)
         {
             itemColumnDiv.style.color = this.desc.color;
         }
+        else if ('color' in this.styles)
+        {
+            itemColumnDiv.style.color = this.styles.color;
+        }
 
         if (this.desc.noBorder)
             itemColumnDiv.style.borderColor = 'transparent';
 
         if ('fontSize' in this.desc)
             itemColumnDiv.style.fontSize = this.desc.fontSize;
+        else if  ('fontSize' in this.styles)
+            itemColumnDiv.style.fontSize = this.styles.fontSize;
 
         if ('itemPadding' in this.desc)
         {
