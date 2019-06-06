@@ -326,6 +326,7 @@ Cary.ui.ListView.prototype.selectItem = function (index)
 Cary.ui.ListView.prototype.onClickItem = function (event, itemDiv)
 {
     var i, j;
+    var scrollPos = this.client.scrollTop;
 
     for (i = 0; i < this.items.length; ++ i)
     {
@@ -338,6 +339,10 @@ Cary.ui.ListView.prototype.onClickItem = function (event, itemDiv)
                 if (!Cary.tools.isNothing (this.desc.columns [j].onItemClick))
                     this.desc.columns [j].onItemClick (i, j, this.items [i]);
 
+                event.cancelBubble = true;
+
+                this.client.scrollTop = scrollPos;
+                
                 return;
             }
         }

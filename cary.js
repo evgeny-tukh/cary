@@ -790,7 +790,7 @@ Cary.Map.prototype.setBounds = function (bounds, padding)
     this.map.fitBounds (bounds, padding);
 }
 
-Cary.Map.prototype.createMarker = function (lat, lon, options)
+Cary.Map.prototype.createMarker = function (lat, lon, options, rotation)
 {
     var color;
     var markerOptions;
@@ -825,10 +825,18 @@ Cary.Map.prototype.createMarker = function (lat, lon, options)
 
         if (options.strokeWeight)
             markerOptions.icon.strokeWeight = options.strokeWeight;
+
+        if (rotation)
+            markerOptions.icon.rotation = rotation;
     }
     
     if ('icon' in options)
+    {
         markerOptions.icon = { url: options.icon };
+
+        if (rotation)
+            markerOptions.icon.rotation = rotation;
+    }
     
     if ('iconOrigin' in options && 'icon' in markerOptions)
         markerOptions.icon.origin = new google.maps.Point (options.iconOrigin.x, options.iconOrigin.y);
