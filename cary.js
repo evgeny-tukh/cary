@@ -739,6 +739,16 @@ Cary.Map.prototype.setCenter = function (lat, lon)
     this.map.setCenter (new google.maps.LatLng (lat, lon));
 };
 
+Cary.Map.prototype.fitBounds = function (north, west, south, east)
+{
+    this.map.fitBounds ({ north: north, south: south, east: east, west: west });
+};
+
+Cary.Map.prototype.fitBoundsLiteral = function (bounds)
+{
+    this.map.fitBounds (bounds);
+};
+
 Cary.Map.prototype.editCoordinate = function (parent, mode, initialValue, callbacks)
 {
     new Cary.ui.CoordEditWnd (parent, { mode: mode, value: initialValue }, callbacks);
