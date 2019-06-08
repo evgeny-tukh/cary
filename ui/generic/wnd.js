@@ -3,7 +3,9 @@ Cary.ui.Window = function (desc)
     var instance = this;
     var paneMode;
     var attach;
-    
+
+    Cary.ui.Window.instances.push (this);
+
     if (Cary.tools.isNothing (desc))
         desc = {};
     
@@ -19,7 +21,12 @@ Cary.ui.Window = function (desc)
     this.parent    = Cary.tools.isNothing (desc.parent) ? document.getElementsByTagName ('body') [0] : desc.parent;
     this.desc      = desc;
     this.adjustPos = function () { adjustPosition (this); };
-    
+
+    this.wnd.wndObject = this;
+
+    if (this.client)
+        this.client.wndObject = this;
+
     if (this.closeIcon !== null)
     {
         this.closeIcon.className = 'windowCloseIcon';
@@ -139,6 +146,38 @@ Cary.ui.Window = function (desc)
                 instance.wnd.style.position = 'absolute';
         }
     }
+};
+
+Cary.ui.Window.instances = [];
+
+Cary.ui.Window.findObjectByHtmlObject = function (object)
+{
+    var result = null;
+
+    for (var i = 0; i < Cary.ui.Window.instances.length; ++ i)
+    {
+        if (Cary.ui.Window.instances [i].wnd === object || Cary.ui.Window.instances [i].client === object)
+        {
+            result = Cary.ui.Window.instances [i]; break;
+        }
+    }
+
+    return result;
+};
+
+Cary.ui.Window.findObjectByKey = function (key, value)
+{
+    var result = null;
+
+    for (var i = 0; i < Cary.ui.Window.instances.length; ++ i)
+    {
+        if (key in Cary.ui.Window.instances [i] && Cary.ui.Window.instances [i][key] === value)
+        {
+            result = Cary.ui.Window.instances [i]; break;
+        }
+    }
+
+    return result;
 };
 
 Cary.ui.Window.prototype.onInitialize = function ()
