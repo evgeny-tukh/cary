@@ -54,6 +54,17 @@ Cary.WndFactory.prototype.registerGlobalAction = function (name, handler)
     Cary.WndFactory.actions [name] = handler;
 };
 
+Cary.WndFactory.callGlobalAction = function (name, param)
+{
+    if (name in Cary.WndFactory.actions)
+    {
+        var handler = Cary.WndFactory.actions [name];
+
+        if (typeof (handler) === 'function')
+            handler (null, param);
+    }
+};
+
 Cary.WndFactory.invokeGlobalAction = function (obj, name, param, evtObj)
 {
     var htmlObject = obj.htmlObject;
