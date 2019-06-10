@@ -334,7 +334,7 @@ Cary.Map.prototype.localizePolyline = function (points)
     }
 };
 
-Cary.Map.prototype.plotPolyline = function (startX, startY, callbacks, tempLegColor, initialObject, objectType, userType, createUserObject)
+Cary.Map.prototype.plotPolyline = function (startX, startY, callbacks, tempLegColor, initialObject, objectType, userType, createUserObject, maxPoints)
 {
     var start     = this.clientToGeo (startX, startY);
     var points    = [{ lat: start.lat (), lon: start.lng () }];
@@ -344,6 +344,7 @@ Cary.Map.prototype.plotPolyline = function (startX, startY, callbacks, tempLegCo
     var click     = this.addEventListener ('click', onClick);
     var tempLeg   = null;
     var instance  = this;
+    var done      = false;
     var interface = new Cary.Map.prototype.Interface ({ stop: stop, save: save, changePoint: changePoint, newPoint: newPoint, deletePoint: deletePoint,
                                                         getObject: function () { return object; }, drawDraggable: drawDraggable });
     var balloon   = new Cary.controls.Balloon (this, { x: startX, y: startY, horOffset: 20, verOffset: 20, text: 'aaa' });
@@ -418,7 +419,9 @@ Cary.Map.prototype.plotPolyline = function (startX, startY, callbacks, tempLegCo
     function stop ()
     {
         instance.stopEventListener (mouseMove);
-        instance.stopEventListener (click);
+
+        if (click)
+            instance.stopEventListener (click);
 
         // Mark handlers as invalid
         mouseMove = null;
@@ -440,6 +443,9 @@ Cary.Map.prototype.plotPolyline = function (startX, startY, callbacks, tempLegCo
             
             balloon = null;
         }
+
+        if (callbacks.onStop)
+            callbacks.onStop ();
     }
 
     function drawDraggable (callbacks)
@@ -484,6 +490,21 @@ Cary.Map.prototype.plotPolyline = function (startX, startY, callbacks, tempLegCo
              if (click !== null)
                  drawDraggable (callbacks);
                  //drawer.draw (instance.map);
+
+            if (maxPoints && object.points.length >= maxPoints)
+            {
+                instance.stopEventListener (click);
+
+                click = null;
+                done  = true;
+
+                if (tempLeg !== null)
+                {
+                    tempLeg.setMap (null);
+                
+                    tempLeg = null;
+                }                
+            }
         }
     }
     
@@ -499,12 +520,93 @@ Cary.Map.prototype.plotPolyline = function (startX, startY, callbacks, tempLegCo
             if (tempLeg !== null)
                 tempLeg.setMap (null);
 
-            tempLeg = Cary.drawers.PolylineDrawer.drawGeoPolyline (instance.map, points, { color: tempLegColor, lineWidth: 3, style: Cary.userObjects.lineStyles.DASH });
+            if (!done)
+                tempLeg = Cary.drawers.PolylineDrawer.drawGeoPolyline (instance.map, points, { color: tempLegColor, lineWidth: 3, style: Cary.userObjects.lineStyles.DASH });
 
             balloon.setPosition (event.latLng.lat (), event.latLng.lng ());
             balloon.setText ((rangeBrg.range * 1.852).toFixed (3) + 'km\n' + Cary.tools.formatFloatWithLZ (rangeBrg.bearing, 5, 1) + Cary.symbols.degree);
         }
     }
+};
+
+Cary.Map.prototype.plotCircle = function (startX, startY, callbacks, tempLegColor, initialObject)
+{
+    var cb        = {};
+    var circle    = null;
+    var drawer    = null;
+    var instance  = this;
+    var interface = null;
+    
+    for (var key in callbacks)
+        cb [key] = callbacks [key];
+
+    cb.onStop = () =>
+    {
+        if (drawer)
+            drawer.undraw ();
+    };
+
+    cb.onPointChanged = (index, point) =>
+    {
+        var line = interface.getObject ();
+
+        switch (index)
+        {
+            case 0:
+                circle.position.lat = point.lat;
+                circle.position.lon = point.lon;
+
+                circle.radius = Cary.geo.calcSphericalRange (circle.position, line.points [1], true);
+
+                break;
+
+            case 1:
+                circle.radius = Cary.geo.calcSphericalRange (circle.position, point, true); break;
+
+            default:
+                return;
+        }
+
+        if (drawer)
+        {
+            drawer.undraw ();
+            drawer.draw (instance);
+        }
+
+        if (callbacks.onPointChanged)
+            callbacks.onPointChanged (index, point);
+    };
+
+    cb.onNewPoint = (lat, lon) =>
+    {
+        if (interface)
+        {
+            var line = interface.getObject ();
+
+            if (line.points.length > 1)
+            {
+                var center = line.points [0];
+                var point  = line.points [1];
+                var radius = Cary.geo.calcSphericalRange (center, point, true);
+
+                if (!circle)
+                {
+                    circle = new Cary.userObjects.UserCircle ('', center, radius);
+                    drawer = circle.createDrawer ();
+                }
+
+                drawer.undraw ();
+                drawer.draw (instance);
+
+                if (callbacks.onNewPoint)
+                    callbacks.onNewPoint (lat, lon);
+            }
+        }
+    };
+
+    interface = this.plotPolyline (startX, startY, cb, tempLegColor, initialObject, Cary.userObjects.objectTypes.POLYLINE, null, null, 2);
+
+    return interface;
 };
 
 Cary.tools.getTimestamp = function ()

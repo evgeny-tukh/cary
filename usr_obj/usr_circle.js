@@ -1,6 +1,6 @@
 Cary.userObjects.UserCircle = function (name, position, radius, properties)
 {
-    Cary.userObjects.UserIcon.apply (this, arguments);
+    Cary.userObjects.UserIcon.apply (this, [name, position, properties]);
 
     this.radius = radius;
     this.type   = Cary.userObjects.objectTypes.CIRCLE;
