@@ -296,9 +296,9 @@ Cary.ui.ListView.prototype.selectItem = function (index)
         this.selection = index;
 
         if (this.items [index].itemDiv.offsetTop < this.client.scrollTop)
-            this.client.scrollTop = this.items [index].itemDiv.offsetTop;
+            this.client.scrollTop = this.items [index].itemDiv.offsetTop - this.client.offsetTop;
         else if (this.items [index].itemDiv.offsetTop > (this.client.scrollTop + this.client.offsetHeight))
-            this.client.scrollTop = this.items [index].itemDiv.offsetTop;
+            this.client.scrollTop = this.items [index].itemDiv.offsetTop - this.client.offsetTop;
 
         for (i = 0; i < this.items.length; ++ i)
         {
