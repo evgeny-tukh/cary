@@ -990,6 +990,37 @@ Cary.Map.prototype.createPolyline = function (points, options)
     
     points.forEach (function (point) { plOptions.path.push ({ lat: point.lat, lng: point.lon }); });
     
+    if (options.dashed || options.dotted || options.arrowed)
+    {
+        var repeat;
+        var lineSymbol;
+        var iconOptions;
+
+        if (options.arrowed)
+        {
+            lineSymbol = { path: 'M0 0 L 0 -10 L -2 -6 L 2 -6 L 0 -10', scale: 1, strokeOpacity: 1 };
+            repeat     = '10px';
+        }
+        else if (options.dashed)
+        {
+            //lineSymbol  = { path: 'M 0,-2 0,0', strokeOpacity: 1, scale: 4 };
+            lineSymbol  = { path: 'M 0,-1 0,0', strokeOpacity: 1, scale: 4 };
+            repeat      = '10px';
+        }
+        else
+        {
+            lineSymbol  = { path: 'M 0,-1 0,0', strokeOpacity: 1, scale: 2 };
+            repeat      = '10px';
+        }
+
+        iconOptions = { icon: lineSymbol, offset: '0', repeat: repeat };
+
+        plOptions.icons = [iconOptions];
+
+        if (options.dashed || options.dotted)
+            plOptions.strokeWeight = 0;
+    }
+
     return new google.maps.Polyline (plOptions);
 };
 
