@@ -3,14 +3,16 @@ Cary.ui.DateHourBox = function (desc)
     var control    = document.createElement ('div'),
         datePicker = document.createElement ('input'),
         hourBox    = document.createElement ('input');
-    var parent     = getCtlParent (desc);
-    var dateTime   = getCtlDescField (desc, 'value');
+    var parent     = Cary.tools.getCtlParent (desc);
+    var dateTime   = Cary.tools.getCtlDescField (desc, 'value');
     var minDate    = 'min' in desc ? desc.min : null;
     var maxDate    = 'max' in desc ? desc.max : null;
     var onChange   = 'onChange' in desc ? desc.onChange : null;
     var calendCtrl = null;
     var utcMode    = 'utc' in desc ? desc.utc : true;
     var defHours   = 'defHours' in desc ? desc.defHours : null;
+
+    this.htmlObject = control;
 
     control.className = getClassName ('dateTimeBox');
     
@@ -24,20 +26,20 @@ Cary.ui.DateHourBox = function (desc)
     hourBox.id        = 'id' in desc ? desc.id + '_hour' : null;
     hourBox.onclick   = function (event)
                         {
-                            new HourSelector ({ parent: control, x: event.clientX, y: event.clientY, value: parseInt (hourBox.value), utc: utcMode,
-                                                onSelect: function (value)
-                                                          {
-                                                              hourBox.value = value.toString ();
-                                                              
-                                                              if (onChange)
-                                                                  onChange ();
-                                                          }});
+                            new Cary.ui.HourSelector ({ parent: control, x: event.clientX, y: event.clientY, value: parseInt (hourBox.value), utc: utcMode,
+                                                        onSelect: function (value)
+                                                                  {
+                                                                      hourBox.value = value.toString ();
+                                                                      
+                                                                      if (onChange)
+                                                                          onChange ();
+                                                                  }});
                         };
 
     if (dateTime !== null)
     {
-        var date = utcMode ? formatDateUTC (dateTime) : formatDateLocal (dateTime);
-        var hour = utcMode ? formatHourUTC (dateTime) : formatHourLocal (dateTime);
+        var date = utcMode ? Cary.tools.formatDateUTC (dateTime) : Cary.tools.formatDateLocal (dateTime);
+        var hour = utcMode ? Cary.tools.formatHourUTC (dateTime) : Cary.tools.formatHourLocal (dateTime);
         
         datePicker.value = date;
         hourBox.value    = hour.toString ();
@@ -46,6 +48,30 @@ Cary.ui.DateHourBox = function (desc)
     control.appendChild (datePicker);
     control.appendChild (hourBox);
     parent.appendChild (control);
+    
+    if (desc.buttons)
+    {
+        new Cary.ui.Button ({ parent: control, text: Cary.symbols.check, visible: true, className: 'dhbButton',
+                              onClick: () =>
+                              {
+                                  parent.removeChild (control);
+
+                                  if (desc.onOk)
+                                        desc.onOk (getValue ());
+
+                                  event.cancelBubble = true;
+                              } });
+        new Cary.ui.Button ({ parent: control, text: Cary.symbols.cross, visible: true, className: 'dhbButton',
+                              onClick: (event) =>
+                              {
+                                  parent.removeChild (control);
+
+                                  if (desc.onCancel)
+                                      desc.onCancel ();
+
+                                  event.cancelBubble = true;
+                              } });
+    }
     
     this.htmlObject = control;
     this.setValue   = setValue;
@@ -89,7 +115,7 @@ Cary.ui.DateHourBox = function (desc)
         var windowHeight = window.innerHeight;
         var calendarDesc;
         
-        if (isUndefinedOrNull (event))
+        if (!event)
             event = window.event;
         
         x = event.clientX;
@@ -101,15 +127,15 @@ Cary.ui.DateHourBox = function (desc)
         if ((y + 180) > windowHeight)
             y = windowHeight - 180;
 
-        if (CalendarControl.instance !== null)
-            CalendarControl.instance.close ();
+        if (Cary.ui.CalendarControl.instance !== null)
+            Cary.ui.CalendarControl.instance.close ();
 
         calendarDesc = { position: { x: x, y: y }, utc: utcMode,
                          onSelect: function (date)
                                    {
-                                        datePicker.value = formatDateLocal (date);
+                                        datePicker.value = Cary.tools.formatDateLocal (date);
 
-                                        CalendarControl.instance.close ();
+                                        Cary.ui.CalendarControl.instance.close ();
                                         
                                         if ('onDateChanged' in desc)
                                             desc.onDateChanged (date);
@@ -121,7 +147,7 @@ Cary.ui.DateHourBox = function (desc)
         if (maxDate !== null)
             calendarDesc.max = maxDate;
         
-        calendCtrl = new CalendarControl (calendarDesc, this.value === '' ? new Date () : stringToDateUTC (this.value /*+ 'T00:00:00Z'*/));
+        calendCtrl = new Cary.ui.CalendarControl (calendarDesc, this.value === '' ? new Date () : Cary.tools.stringToDateUTC (this.value /*+ 'T00:00:00Z'*/));
     }
     
     function getClassName (defaultClass, classKey)
@@ -135,7 +161,7 @@ Cary.ui.DateHourBox = function (desc)
     function getValue ()
     {
         var value = datePicker.value;
-        var date  = stringToDateUTC (value /*+ 'T00:00:00Z'*/);
+        var date  = Cary.tools.stringToDateUTC (value /*+ 'T00:00:00Z'*/);
 
         if (date !== null)
         {
@@ -155,8 +181,8 @@ Cary.ui.DateHourBox = function (desc)
     
     function setValue (value)
     {
-        var date = value ? (utcMode ? formatDateUTC (value) : formatDateLocal (value)) : null;
-        var hour = value ? (utcMode ? formatHourUTC (value) : formatHourLocal (value)) : null;
+        var date = value ? (utcMode ? Cary.tools.formatDateUTC (value) : Cary.tools.formatDateLocal (value)) : null;
+        var hour = value ? (utcMode ? Cary.tools.formatHourUTC (value) : Cary.tools.formatHourLocal (value)) : null;
         
         datePicker.value = date;
         hourBox.value    = hour;

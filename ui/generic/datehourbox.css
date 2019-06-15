@@ -1,0 +1,114 @@
+.dateBox, .dateBox2
+{
+    padding-left: 0px;
+    width: 110px;
+}
+
+.dateHourBox2
+{
+    line-height: 25px;
+}
+
+.dateBox3
+{
+    width: 135px;
+}
+
+.dateBox, .timeBox, .minuteBox, .hourBox
+{
+    font-size: 16px;
+    background-color: #ece5e5;
+    border-radius: 3px;
+    border-style: none;
+    text-align: center;
+    color: black;
+    outline: none;
+    margin-right: 10px;
+}
+
+.minuteBox
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    width: 80px;
+}
+
+.dateTimeBox
+{
+    float: right;
+    padding: 0px;
+}
+
+.dateBox, .timeBox, .hourBox
+{
+    display: inline;
+}
+
+.dateBox
+{
+    width: 135px;
+}
+
+.timeBox
+{
+    width: 105px;
+}
+
+.hourBox
+{
+    width: 40px;
+    height: 14px;
+    margin-right: 0px;
+    padding: 2px;
+    padding-left: 0px;
+    padding-top: 3px;
+}
+
+.hourDiv, .selHourDiv
+{
+    color: white;
+    position: absolute;
+    width: 22px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 22px;
+    z-index: 950;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.hourDiv
+{
+    background: linear-gradient(#6d94bfd4,#2e3a46 50%,#3e648dbf)!important;
+}
+
+.selHourDiv
+{
+    background: blue;
+}
+
+.hourDiv:hover
+{
+    background: linear-gradient(rgb(61, 61, 61), rgb(10, 10, 10));
+}
+
+.dhbButton
+{
+    font-size: 11pt;
+    background-color: #cccccc;
+    color: #000000;
+    border-style: none;
+    border-radius: 3px;
+    padding: 0px;
+    padding-left: 3px;
+    padding-right: 3px;
+    margin-left: 5px;
+}
+
+.dhbButton:hover
+{
+    background-color: #999999;
+}

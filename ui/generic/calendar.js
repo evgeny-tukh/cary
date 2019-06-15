@@ -1,4 +1,4 @@
-function CalendarControl (desc, date)
+Cary.ui.CalendarControl = function (desc, date)
 {
     var parent;
     var control;
@@ -24,7 +24,7 @@ function CalendarControl (desc, date)
     maxDate.setSeconds (59);
     maxDate.setMilliseconds (999);
     
-    CalendarControl.instance = this;
+    Cary.ui.CalendarControl.instance = this;
     
     if (typeof (desc) === 'undefined')
         desc = {};
@@ -66,7 +66,7 @@ function CalendarControl (desc, date)
     {
         parent.removeChild (control);
         
-        CalendarControl.instance = null;
+        Cary.ui.CalendarControl.instance = null;
     }
 
     function createControl (desc)
@@ -132,7 +132,7 @@ function CalendarControl (desc, date)
             daysOfWeek [i] = document.createElement ('div');
 
             daysOfWeek [i].className = 'dayOfWeek';
-            daysOfWeek [i].innerText = CalendarControl.weekDays [i];
+            daysOfWeek [i].innerText = Cary.ui.CalendarControl.weekDays [i];
 
             weekHeader.appendChild (daysOfWeek [i]);
         }
@@ -226,7 +226,7 @@ function CalendarControl (desc, date)
             -- year;
         }
 
-        monthName.innerText = CalendarControl.monthNames [month] + ' ' + year.toString ();
+        monthName.innerText = Cary.ui.CalendarControl.monthNames [month] + ' ' + year.toString ();
 
         popupateCalendar ();
     }
@@ -246,7 +246,7 @@ function CalendarControl (desc, date)
             ++ year;
         }
 
-        monthName.innerText = CalendarControl.monthNames [month] + ' ' + year.toString ();
+        monthName.innerText = Cary.ui.CalendarControl.monthNames [month] + ' ' + year.toString ();
 
         popupateCalendar ();
     }
@@ -280,7 +280,7 @@ function CalendarControl (desc, date)
         beginWeekDayNo  = beginDate.getDay ();
         endWeekDayNo    = endDate.getDay ();
 
-        monthName.innerText = CalendarControl.monthNames [month] + ' ' + year.toString ();
+        monthName.innerText = Cary.ui.CalendarControl.monthNames [month] + ' ' + year.toString ();
 
         for (weekNo = 1; weekNo <= 6; ++ weekNo)
         {
@@ -339,11 +339,11 @@ function CalendarControl (desc, date)
             }
         }
     }
-}
+};
 
-CalendarControl.monthNames = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-                               'October', 'November', 'December' ];
+Cary.ui.CalendarControl.monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                                      'October', 'November', 'December'];
 
-CalendarControl.weekDays = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ];
+Cary.ui.CalendarControl.weekDays = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ];
 
-CalendarControl.instance = null;
+Cary.ui.CalendarControl.instance = null;

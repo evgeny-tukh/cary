@@ -905,13 +905,22 @@ Cary.Map.prototype.setBounds = function (bounds, padding)
 Cary.Map.prototype.createMarker = function (lat, lon, options, rotation)
 {
     var color;
+    var strokeColor;
+    var opacity;
     var markerOptions;
     
     if (Cary.tools.isNothing (options))
         options = {};
     
-    color         = 'color' in options ? options.color : 'black';
+    color         = options.color ? options.color : 'black';
+    strokeColor   = options.strokeColor ? options.strokeColor : color;
     markerOptions = { map: this.map, position: { lat: lat, lng: lon }, visible: true };
+
+    if ('opacity' in options)
+        markerOptions.opacity = options.opacity;
+    
+    if ('zIndex' in options)
+        markerOptions.zIndex = options.zIndex;
     
     if ('title' in options)
         markerOptions.title = options.title;
@@ -927,7 +936,7 @@ Cary.Map.prototype.createMarker = function (lat, lon, options, rotation)
     
     if ('shape' in options)
     {
-        markerOptions.icon = { fillColor: color, fillOpacity: 1, path: options.shape, strokeColor: color };
+        markerOptions.icon = { fillColor: color, fillOpacity: 1, path: options.shape, strokeColor: strokeColor };
 
         if (options.rotation)
             markerOptions.icon.rotation = options.rotation;
