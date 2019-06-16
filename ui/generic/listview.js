@@ -398,7 +398,16 @@ Cary.ui.ListView.prototype.setItemText = function (itemIndex, columnIndex, text)
     this.items [itemIndex].itemColumns [columnIndex].innerText = text;
     
     if (text !== null && text !== '' && this.items [itemIndex].itemColumns [columnIndex].style.color === 'transparent')
-        this.items [itemIndex].itemColumns [columnIndex].style.color = null;
+    {
+        var color = null;
+
+        if ('color' in this.desc)
+            color = this.desc.color;
+        else if ('color' in this.styles)
+            color = this.styles.color;
+
+        this.items [itemIndex].itemColumns [columnIndex].style.color = color;
+    }
 };
 
 Cary.ui.ListView.prototype.getItemText = function (itemIndex, columnIndex)
