@@ -778,6 +778,22 @@ Cary.Map.prototype.geoToClient = function (position)
     return new google.maps.Point (x, y);*/
 };
 
+Cary.Map.prototype.getZoom = function ()
+{
+    return this.map.getZoom ();
+};
+
+Cary.Map.prototype.getCenter = function ()
+{
+    var centerGeo  = this.map.getCenter ();
+    var projection = this.map.getProjection ();
+    var centerPt   = new google.maps.Point (0, 0);
+
+    projection.fromLatLngToPoint (centerGeo, centerPt);
+
+    return { lat: centerGeo.lat (), lon: centerGeo.lng (), x: centerPt.x, y: centerPt.y };
+};
+
 Cary.Map.prototype.clientToGeo = function (x, y)
 {
     var projection  = this.map.getProjection ();
