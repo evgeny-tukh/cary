@@ -783,6 +783,11 @@ Cary.Map.prototype.getZoom = function ()
     return this.map.getZoom ();
 };
 
+Cary.Map.prototype.setZoom = function (zoom)
+{
+    this.map.setZoom (zoom);
+};
+
 Cary.Map.prototype.getCenter = function ()
 {
     var centerGeo  = this.map.getCenter ();

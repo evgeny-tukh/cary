@@ -54,6 +54,11 @@ Cary.WndFactory.prototype.registerGlobalAction = function (name, handler)
     Cary.WndFactory.actions [name] = handler;
 };
 
+Cary.WndFactory.registerGlobalAction = function (name, handler)
+{
+    Cary.WndFactory.actions [name] = handler;
+};
+
 Cary.WndFactory.callGlobalAction = function (name, param)
 {
     if (name in Cary.WndFactory.actions)

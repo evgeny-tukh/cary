@@ -1,3 +1,8 @@
+Cary.geo.WGS84 = { flattening: 3.35281066474751169502944198282e-3, equatorialRadius: 6378137.0 };   
+
+Cary.geo.WGS84.equatorialRadiusNM = Cary.geo.WGS84.equatorialRadius / 1852.0;
+Cary.geo.WGS84.eccentricity       = Math.sqrt (Cary.geo.WGS84.flattening * 2 - Cary.geo.WGS84.flattening * Cary.geo.WGS84.flattening);
+
 function fmod (a, b)
 {
     return a % b;
@@ -387,11 +392,42 @@ Cary.geo.calcGCRangeAndBearing = function (begLat, begLon, endLat, endLon, datum
     return { range: range, bearing: rad2deg (begBearing), endBearing: rad2deg (endBearing) };
 };
 
+Cary.geo.calcRangeBearing = function (begLat, begLon, endLat, endLon)
+{
+    var origin = new google.maps.LatLng (begLat, begLon);
+    var dest   = new google.maps.LatLng (endLat, endLon);
+
+    return { bearing: google.maps.geometry.spherical.computeHeading (origin, dest),
+             range: google.maps.geometry.spherical.computeDistanceBetween (origin, dest) / 1852.0 };
+};
+
 Cary.geo.calcPos = function (begLat, begLon, range, bearing)
 {
-    var position = google.maps.geometry.spherical.computeOffset (new google.maps.LatLng (begLat, begLon), range * 1852, bearing);
+    var position = google.maps.geometry.spherical.computeOffset (new google.maps.LatLng (begLat, begLon), range * 1852, bearing, 6366707.0194937074958298109629434);
     
     return { endBearing: bearing, lat: position.lat (), lon: position.lng () };
+};
+
+Cary.geo.calcRLPosOnLeg = function (begLat, begLon, endLat, endLon, range)
+{
+    var coefMin = 0.0;
+    var coefMax = 1.0;
+    var rangeBearing, lat, lon, coef;
+
+    while (Math.abs (coefMin - coefMax) > 1.0E-6)
+    {
+        coef         = (coefMin + coefMax) * 0.5;
+        lat          = (endLat - begLat) * coef + begLat;
+        lon          = (endLon - begLon) * coef + begLon;        
+        rangeBearing = Cary.geo.calcRLRangeAndBearing2 (begLat, begLon, lat, lon);
+
+        if (rangeBearing.range < range)
+            coefMin = coef;
+        else
+            coefMax = coef;
+    }
+
+    return { endBearing: rangeBearing.bearing, lat: lat, lon: lon };
 };
 
 Cary.geo.calcGCPos = function (begLat, begLon, range, begBearing, datum)
@@ -661,6 +697,48 @@ function internalCalcRLRng (eccentricity, equatorialRadius, begLat, endLat, west
              
     return hypoLen (dEasting, dNorthing);
 }
+
+///////////////////////
+Cary.geo.calcRhumblinePos2 = function (begLat, begLon, range, bearing)
+{
+    begLat = normalizeLat (begLat * Math.PI / 180.0);
+    begLon = normalizeLat (begLon * Math.PI / 180.0);
+    
+    bearing *= Math.PI / 180.0;
+
+    if (!checkBegPointCourseDist (begLat, begLon, bearing, range, true, false))
+        return null;
+
+    // Calculation block
+    {
+        var endLat, endLon, deltaPhi, position;
+        var stepDist  = 10.0,
+            precision = 1.0e-10;
+
+        if (isNaN (range) || range < 0.0)
+            return null;
+
+        while (range > stepDist)
+        {
+            position = internalCalcRLPos (Cary.geo.WGS84.eccentricity, Cary.geo.WGS84.equatorialRadiusNM, begLat,  begLon,
+                                          stepDist, bearing, precision);
+
+            begLat = position.lat;
+            begLon = position.lon;
+            range -= stepDist;
+        }
+
+        position = internalCalcRLPos (Cary.geo.WGS84.eccentricity, Cary.geo.WGS84.equatorialRadiusNM, begLat,  begLon,
+                                      range, bearing, precision);
+    }
+
+    endLat = position.lat;
+    endLon = normalizeLon (position.lon);
+
+    return { lat: endLat * 180.0 / Math.PI, lon: endLon * 180.0 / Math.PI };
+}
+
+///////////////////////
 
 Cary.geo.calcRLRangeAndBearing2 = function (begLat, begLon, endLat, endLon, geoid)
 {
