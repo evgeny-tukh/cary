@@ -377,3 +377,20 @@ Cary.maps.getBounds = function (points)
     return bounds;
 };
 
+Cary.maps.geo2wm = function (lat, lon, zoom)
+{
+    lat *= (Math.PI / 180.0);
+    lon *= (Math.PI / 180.0);
+
+    var coef = (128.0 / Math.PI) * (1 << zoom);
+
+    var easting  = coef * (lon + Math.PI);
+    var northing = coef * (Math.PI - Math.log (Math.tan (Math.PI * 0.25 + lat * 0.5)));
+
+    var tileX    = Math.floor (easting / 256);
+    var tileY    = Math.floor (northing / 256);
+    var offsetX  = easting % 256;
+    var offsetY  = northing % 256;
+
+    return { y: northing, x: easting, tileX: tileX, tileY: tileY, offsetX: offsetX, offsetY: offsetY };
+}

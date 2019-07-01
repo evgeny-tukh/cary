@@ -16,7 +16,7 @@ Cary.Service.prototype.start = function (callIWorkerImmediately)
     if (Cary.tools.isNothing (callIWorkerImmediately))
         callIWorkerImmediately = false;
     
-    if (this.timer === null)
+    if (!this.timer)
     {
         var instance = this;
         
